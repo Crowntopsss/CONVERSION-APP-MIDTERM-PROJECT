@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // make conversion function
     private fun makeConversion(input: Double?, conversionUnit: String): Double? {
         return when (conversionUnit.lowercase()) {
             "km to mi" -> input?.times(0.62)
