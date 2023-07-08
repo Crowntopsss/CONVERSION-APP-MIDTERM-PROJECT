@@ -21,8 +21,8 @@
         android:layout_margin="16dp"
         android:layout_height="40dp"
         android:hint="Enter input"
-        android:background="@drawable/textview_border"
-        android:inputType="text" />
+        android:inputType="number"
+        android:background="@drawable/textview_border" />
 
     <!-- Spinner -->
     <Spinner

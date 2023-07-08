@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import com.example.conversionapp_midterm.databinding.ActivityMainBinding
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.widget.AdapterView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -32,21 +36,42 @@ class MainActivity : AppCompatActivity() {
         // Set the adapter for the Spinner
         binding.converUnitSpinner.adapter = adapter
 
-        // Set a click listener for the Calculate button
-        binding.calculateButton.setOnClickListener {
-            // Get the input value from the EditText
-            val inputValue = binding.inputEditText.text.toString().toDoubleOrNull()
+        // Set a selection listener for the Spinner
+        binding.converUnitSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                updateOutput() // Call the updateOutput function when an item is selected
+            }
 
-            // Perform the conversion based on the selected item in the Spinner
-            val selectedItem = binding.converUnitSpinner.selectedItem.toString()
-            val result = makeConversion(inputValue, selectedItem)
-
-            // Update the output TextView with the result
-            binding.outputTextView.text = result?.toString() ?: "Invalid input"
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Do nothing when no item is selected
+            }
         }
+
+        // Set a text change listener for the input EditText
+        binding.inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Do nothing before text is changed
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateOutput() // Call the updateOutput function when the text is changed
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Do nothing after text is changed
+            }
+        })
     }
 
-    // make conversion function
+    // Function to update the output based on the current input and spinner selection
+    private fun updateOutput() {
+        val inputValue = binding.inputEditText.text.toString().toDoubleOrNull()
+        val selectedItem = binding.converUnitSpinner.selectedItem.toString()
+        val result = makeConversion(inputValue, selectedItem)
+        binding.outputTextView.text = result?.toString() ?: "Invalid input"
+    }
+
+    // Function to perform the conversion based on the selected conversion unit
     private fun makeConversion(input: Double?, conversionUnit: String): Double? {
         return when (conversionUnit.lowercase()) {
             "km to mi" -> input?.times(0.62)
